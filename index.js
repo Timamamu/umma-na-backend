@@ -1,7 +1,7 @@
 //backend index.js
 const express = require('express');
 const admin = require('firebase-admin');
-const serviceAccount = require('./firebaseKey.json');
+//const serviceAccount = require('./firebaseKey.json'); last update
 
 const app = express();
 //const PORT = 3001;
@@ -21,11 +21,21 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+require("dotenv").config();
 
-// Initialize Firebase Admin
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+  }),
 });
+
+
+// Initialize Firebase Admin *** last update
+//admin.initializeApp({ 
+  //credential: admin.credential.cert(serviceAccount)
+//});
 const db = admin.firestore();
 
 app.use(express.json());
