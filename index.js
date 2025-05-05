@@ -1,13 +1,26 @@
 //backend index.js
+require("dotenv").config();
+
 const express = require('express');
+const cors = require('cors');
 const admin = require('firebase-admin');
 //const serviceAccount = require('./firebaseKey.json'); last update
 
+admin.initializeApp({
+  credential: admin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+  }),
+});
+
+const db = admin.firestore();
+const PORT = process.env.PORT || 3001;
 const app = express();
 //const PORT = 3001;
-const PORT = process.env.PORT || 3001;
 
-const cors = require('cors');
+
+
 //app.use(cors({
   //origin: 'http://localhost:3000', // Specifically allow your frontend
   //methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE'],
@@ -21,22 +34,16 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-require("dotenv").config();
 
-admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-  }),
-});
+
+
 
 
 // Initialize Firebase Admin *** last update
 //admin.initializeApp({ 
   //credential: admin.credential.cert(serviceAccount)
 //});
-const db = admin.firestore();
+
 
 app.use(express.json());
 
