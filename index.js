@@ -4,7 +4,8 @@ const admin = require('firebase-admin');
 const serviceAccount = require('./firebaseKey.json');
 
 const app = express();
-const PORT = 3001;
+//const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 const cors = require('cors');
 //app.use(cors({
@@ -1758,12 +1759,10 @@ app.post('/respond-to-ride-request', async (req, res) => {
   }
 });
 
-
-
-
-
-
 // Start server
+//app.listen(PORT, () => {
+  //console.log(`Server is live at http://localhost:${PORT}`);
+//});
 app.listen(PORT, () => {
-  console.log(`Server is live at http://localhost:${PORT}`);
+  console.log(`Server is live on port ${PORT}`);
 });
