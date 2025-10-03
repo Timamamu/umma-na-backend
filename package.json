@@ -11,7 +11,7 @@
   "description": "",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
+    "dotenv": "^16.6.1",
     "expo-server-sdk": "^3.15.0",
     "express": "^5.1.0",
     "firebase-admin": "^13.2.0"

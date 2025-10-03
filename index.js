@@ -1242,11 +1242,15 @@ app.get('/driver-pending-requests/:id', async (req, res) => {
 // Request ride endpoint that processes symptoms instead of direct condition diagnosis
 // Implement the two-tier driver selection process for ride requests
 app.post('/request-ride', async (req, res) => {
-  console.log('Request ride endpoint hit with:', req.body);
+  //console.log('Request ride endpoint hit with:', req.body);********************************** 
+  console.log('🚨 Ride Request Received: Starting processing...');
   try {
     const { chipsAgentId, symptoms, pickupLat, pickupLng } = req.body;
     
-    console.log('Extracted ride parameters:', { chipsAgentId, symptoms, pickupLat, pickupLng });
+    //console.log('Extracted ride parameters:', { chipsAgentId, symptoms, pickupLat, pickupLng });**********************************
+    console.log(`📌 CHIPS Agent ID: ${chipsAgentId}`);
+    console.log(`📝 Reported Symptoms: ${symptoms.join(', ')}`);
+    console.log(`📍 Pickup Coordinates: (${pickupLat}, ${pickupLng})`);
 
     if (!chipsAgentId || !Array.isArray(symptoms) || symptoms.length === 0 || pickupLat == null || pickupLng == null) {
       console.log('Missing required fields:', { chipsAgentId, symptoms, pickupLat, pickupLng });
@@ -1258,7 +1262,7 @@ app.post('/request-ride', async (req, res) => {
 
     // Map symptoms to a complication type using the defined conditions
     const complicationType = identifyCondition(symptoms);
-    console.log('Identified complication:', complicationType);
+    //console.log('Identified complication:', complicationType);
 
     // Get the capability requirements for this condition
     const conditionRequirements = CAPABILITY_REQUIREMENTS.find(c => c.condition === complicationType);
@@ -1268,10 +1272,12 @@ app.post('/request-ride', async (req, res) => {
     }
     
     const { ideal, acceptable, timeWindow } = conditionRequirements;
-    console.log('Complication requirements:', { ideal, acceptable, timeWindow });
+    //console.log('Complication requirements:', { ideal, acceptable, timeWindow });
+    console.log(`🎯 Care Requirements - Ideal: [${ideal.join(', ')}], Acceptable: [${acceptable.join(', ')}], Time Window: ${timeWindow} min`);
 
     // Get vehicle requirements for this condition
     let vehicleRules = VEHICLE_REQUIREMENTS.find(v => v.condition === complicationType);
+    console.log(`🚗 Allowed Vehicles: [${vehicleRules.allowed.join(', ')}], Preferred: ${vehicleRules.preferred}`);
     if (!vehicleRules) {
       // Default to car-only for safety if not found
       vehicleRules = {
@@ -1289,12 +1295,14 @@ app.post('/request-ride', async (req, res) => {
 
     // ------------ TIER 1: INITIAL DRIVER SELECTION ------------
     // Fetch available drivers with basic filtering
+    console.log('🔍 Searching for available ETS Drivers...');
     const driversSnapshot = await db.collection('etsDrivers')
       .where('isAvailable', '==', true)
       .get();
     
     const allDrivers = driversSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    console.log(`Found ${allDrivers.length} available drivers`);
+    //console.log(`Found ${allDrivers.length} available drivers`);
+    console.log(`✅ Found ${allDrivers.length} available drivers.`);
     
     if (allDrivers.length === 0) {
       console.log('No available drivers found');
