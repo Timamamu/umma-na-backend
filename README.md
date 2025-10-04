@@ -14,8 +14,9 @@ A Firebase project with a service-account credential that has Firestore and FCM 
 
 ### H3 Installation
 1. Clone the repository and install dependencies:
-   `npm install`
-2. (Optional) Remove unused packages if you are not leveraging Expo push notifications.
+   ```bash
+   npm install
+3. (Optional) Remove unused packages if you are not leveraging Expo push notifications.
 
 ### H3 Environment Variables
 Create a .env file with the Firebase service-account credentials and optional port override:
