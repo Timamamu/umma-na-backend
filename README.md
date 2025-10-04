@@ -1,5 +1,8 @@
+![UMMA Logo](assets/ummana.png)
+
 # UMMA NA Backend
 ## Overview
+This project handles the backend for UMMA NA.
 UMMA NA Backend is an Express-based API that orchestrates emergency maternal transport workflows. It authenticates CHIPS agents and ETS drivers, manages catchment areas and hospital metadata, stores ride assignments in Firestore, and coordinates drivers through Firebase Cloud Messaging notifications.
 
 ## Tech Stack
@@ -53,42 +56,42 @@ Each endpoint assumes these collections exist and enforces referential integrity
 POST /auth/login — Validates a CHIPS agent or ETS driver by phone number and username, returning a placeholder dev token.
 
 ### Catchment Areas
-`POST /register-catchment-area — Creates a catchment area after duplicate checks on name/ward/LGA.`
-`GET /catchment-areas — Lists all catchment areas.`
-`PUT /catchment-areas/:id — Updates metadata with duplicate protection.`
-`DELETE /catchment-areas/:id — Prevents removal when linked to agents or drivers.`
+ `POST /register-catchment-area — Creates a catchment area after duplicate checks on name/ward/LGA.`  
+ `GET /catchment-areas — Lists all catchment areas.`  
+ `PUT /catchment-areas/:id — Updates metadata with duplicate protection.`  
+ `DELETE /catchment-areas/:id — Prevents removal when linked to agents or drivers.`  
 
 ### CHIPS Agents
-`POST /register-chips — Registers a CHIPS agent, auto-generating a username and validating phone format.`
-`GET /chips-agents — Lists agents.`
-`PATCH /update-chips-agent/:id — Partially updates agent details.`
-`DELETE /chips-agents/:id — Blocks deletion if active ride requests reference the agent.`
+`POST /register-chips — Registers a CHIPS agent, auto-generating a username and validating phone format.`  
+`GET /chips-agents — Lists agents.`  
+`PATCH /update-chips-agent/:id — Partially updates agent details.`  
+`DELETE /chips-agents/:id — Blocks deletion if active ride requests reference the agent.`  
 
 ### ETS Drivers
-`POST /register-ets-driver — Registers a driver, deriving a fallback location from assigned catchment areas.`
-`GET /ets-drivers — Lists drivers.`
-`PATCH /update-ets-driver/:id — Partially updates driver metadata.`
-`POST /update-driver-location — Stores live location updates, differentiating significant changes and retaining history.`
-`POST /request-driver-location — Requests an immediate location refresh via FCM push, flagging the driver document for follow-up.`
-`DELETE /ets-drivers/:id — Prevents deletion while the driver is attached to active rides.`
+`POST /register-ets-driver — Registers a driver, deriving a fallback location from assigned catchment areas.`  
+`GET /ets-drivers — Lists drivers.`  
+`PATCH /update-ets-driver/:id — Partially updates driver metadata.`  
+`POST /update-driver-location — Stores live location updates, differentiating significant changes and retaining history.`  
+`POST /request-driver-location — Requests an immediate location refresh via FCM push, flagging the driver document for follow-up.`  
+`DELETE /ets-drivers/:id — Prevents deletion while the driver is attached to active rides.`  
 
 ### Hospitals
-`POST /register-hospital — Adds a facility with capability flags, guarding against duplicates by name/ward/LGA and proximity.`
-`GET /hospitals — Lists hospitals.`
-`PATCH /update-hospital/:id — Updates facility info.`
-`DELETE /hospitals/:id — Blocks removal when active ride requests target the hospital.`
+`POST /register-hospital — Adds a facility with capability flags, guarding against duplicates by name/ward/LGA and proximity.`  
+`GET /hospitals — Lists hospitals.`  
+`PATCH /update-hospital/:id — Updates facility info.`  
+`DELETE /hospitals/:id — Blocks removal when active ride requests target the hospital.`  
 
 ### Ride Tracking & History
-`PATCH /update-request/:id — Generic ride request updates.`
-`GET /chips-active-ride/:id — Retrieves the latest active ride for a CHIPS agent.`
-`GET /driver-active-ride/:id — Returns an active ride for a driver, including CHIPS contact info when available.`
-`GET /chips-ride-history/:id — Lists ride history for a CHIPS agent with normalized timestamps.`
-`GET /driver-ride-history/:id — Lists and enriches driver rides, sorting by creation time and embedding agent details.`
-`GET /driver-pending-requests/:id — Shows the most recent pending ride requests (currently unfiltered by geography).`
+`PATCH /update-request/:id — Generic ride request updates.`  
+`GET /chips-active-ride/:id — Retrieves the latest active ride for a CHIPS agent.`  
+`GET /driver-active-ride/:id — Returns an active ride for a driver, including CHIPS contact info when available.`  
+`GET /chips-ride-history/:id — Lists ride history for a CHIPS agent with normalized timestamps.`  
+`GET /driver-ride-history/:id — Lists and enriches driver rides, sorting by creation time and embedding agent details.`  
+`GET /driver-pending-requests/:id — Shows the most recent pending ride requests (currently unfiltered by geography).`  
 
 ### Ride Requests & Notifications
-`POST /request-ride — Core workflow: maps symptoms to emergency conditions, filters available drivers, requests fresh locations, selects a hospital based on capabilities and travel time, persists the ride, and notifies candidate drivers through FCM.`
-`POST /respond-to-ride-request — Records driver accept/decline decisions, updates ride state, manages overrides, and notifies the CHIPS agent on acceptance.`
+`POST /request-ride — Core workflow: maps symptoms to emergency conditions, filters available drivers, requests fresh locations, selects a hospital based on capabilities and travel time, persists the ride, and notifies candidate drivers through FCM.`  
+`POST /respond-to-ride-request — Records driver accept/decline decisions, updates ride state, manages overrides, and notifies the CHIPS agent on acceptance.`  
 
 ### Emergency Triage Logic
 Condition definitions, capability requirements, and vehicle rules live in constants/EMERGENCY_CONDITIONS.js. 
