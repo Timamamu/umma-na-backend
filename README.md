@@ -318,6 +318,12 @@ This project is open source and available under the [MIT License](LICENSE).
 
 For questions, issues, or feature requests, please open an issue on the GitHub repository.
 
+## Related Projects
+
+- **Mobile App**: [umma-na-backend](https://github.com/Timamamu/umma-na-mobile)
+- **Web Frontend**: [umma-na-frontend](https://github.com/Timamamu/umma-na-frontend)
+
+
 ---
 
 **Built for maternal health emergency response by Fatima for the UMMA NA team**
